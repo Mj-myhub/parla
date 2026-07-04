@@ -1,22 +1,49 @@
-"""Unit tests for each tool. Start here on day 1 — write the test, then the tool.
-
-A green CI badge on a junior repo is a real differentiator; these make it green.
-"""
-import pytest
+"""Two-tier verifier: deterministic type match + LLM faithfulness judge (mocked)."""
+import json
 from parla.graph.state import DetectedError, Feedback
-from parla.tools import verifier
+from parla.tools import verifier as v
+
+DET_RULE = {"rule_id": "DET-001", "error_types": ["M:DET", "R:DET"],
+            "title": "Articles", "rule": "Use a/an correctly."}
+WO_RULE = {"rule_id": "WO-002", "error_types": ["R:WO"],
+           "title": "Question word order", "rule": "Direct questions invert aux and subject."}
 
 
-def test_verifier_rejects_ungrounded_correction():
-    fb = Feedback(text="use 'a' before 'apple'",
-                  corrections=[DetectedError(span="a apple", error_type="M:DET",
-                                             suggestion="an apple", rule_id=None)])
-    # a correction with no rule_id must NOT be considered grounded
-    assert verifier.is_grounded(fb, retrieved_rules=[]) is False
+def _c(etype, rid):
+    return DetectedError(span="x", error_type=etype, suggestion="y", rule_id=rid)
 
 
-@pytest.mark.skip(reason="implement detect() first")
-def test_detect_finds_subject_verb_agreement():
-    from parla.tools import error_detection
-    errs = error_detection.detect("He go to school.")
-    assert any("VERB" in e.error_type for e in errs)
+class _Resp:
+    def __init__(self, c): self.content = c
+
+class _Judge:
+    def __init__(self, arr): self._c = json.dumps(arr)
+    def invoke(self, msgs): return _Resp(self._c)
+
+
+def test_type_match_is_verified():
+    assert v.verify([_c("R:DET", "DET-001")], [DET_RULE], strict=False)[0]["status"] == "verified"
+
+def test_missing_rule_id_is_unverified():
+    assert v.verify([_c("R:DET", None)], [DET_RULE], strict=False)[0]["status"] == "unverified"
+
+def test_rule_not_retrieved_is_unverified():
+    assert v.verify([_c("R:DET", "DET-999")], [DET_RULE], strict=False)[0]["status"] == "unverified"
+
+def test_type_mismatch_is_unverified():
+    assert v.verify([_c("R:VERB:TENSE", "DET-001")], [DET_RULE], strict=False)[0]["status"] == "unverified"
+
+def test_judge_flips_wrong_grounding_to_unverified():
+    res = v.verify([_c("R:WO", "WO-002")], [WO_RULE], model=_Judge([False]), strict=True)
+    assert res[0]["status"] == "unverified" and "explain" in res[0]["reason"]
+
+def test_judge_keeps_faithful_grounding():
+    res = v.verify([_c("R:DET", "DET-001")], [DET_RULE], model=_Judge([True]), strict=True)
+    assert res[0]["status"] == "verified"
+
+def test_is_grounded_true_and_false():
+    assert v.is_grounded(Feedback(text="", corrections=[_c("R:DET", "DET-001")]), [DET_RULE]) is True
+    assert v.is_grounded(Feedback(text="", corrections=[_c("R:DET", None)]), [DET_RULE]) is False
+
+def test_no_corrections_is_grounded():
+    assert v.is_grounded(Feedback(text="ok"), []) is True
