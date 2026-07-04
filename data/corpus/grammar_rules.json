@@ -1,0 +1,360 @@
+[
+  {
+    "rule_id": "DET-001",
+    "error_types": [
+      "M:DET",
+      "R:DET"
+    ],
+    "cefr": "A1",
+    "title": "Indefinite article: a vs an",
+    "rule": "Use 'a' before a consonant SOUND and 'an' before a vowel SOUND. It depends on pronunciation, not spelling: 'an hour' (silent h), 'a university' (starts with a /juː/ sound).",
+    "examples": [
+      "a book",
+      "an apple",
+      "an honest man",
+      "a European country"
+    ],
+    "source": "CEFR A1 grammar inventory"
+  },
+  {
+    "rule_id": "DET-002",
+    "error_types": [
+      "M:DET",
+      "U:DET"
+    ],
+    "cefr": "A2",
+    "title": "Definite article with unique/known nouns",
+    "rule": "Use 'the' when both speaker and listener know which specific thing is meant, or when it is unique (the sun, the government). Omit articles with most uncountable and plural nouns used in a general sense.",
+    "examples": [
+      "the sun",
+      "I like music (not: the music)",
+      "the book you gave me"
+    ],
+    "source": "CEFR A2 grammar inventory"
+  },
+  {
+    "rule_id": "SVA-001",
+    "error_types": [
+      "R:VERB:SVA"
+    ],
+    "cefr": "A1",
+    "title": "Subject-verb agreement, present simple",
+    "rule": "In the present simple, add -s/-es to the verb for third person singular (he/she/it). Plural and I/you/we/they take the base form.",
+    "examples": [
+      "He goes to school.",
+      "They go to school.",
+      "She watches TV."
+    ],
+    "source": "CEFR A1 grammar inventory"
+  },
+  {
+    "rule_id": "SVA-002",
+    "error_types": [
+      "R:VERB:SVA"
+    ],
+    "cefr": "B1",
+    "title": "Agreement with collective and indefinite subjects",
+    "rule": "Indefinite pronouns like everyone, someone, each, either take a singular verb. Collective nouns (team, family) take singular in American usage.",
+    "examples": [
+      "Everyone is here.",
+      "Each of the students has a book."
+    ],
+    "source": "CEFR B1 grammar inventory"
+  },
+  {
+    "rule_id": "TENSE-001",
+    "error_types": [
+      "R:VERB:TENSE"
+    ],
+    "cefr": "A2",
+    "title": "Present simple vs present continuous",
+    "rule": "Use present simple for habits and general truths; use present continuous (be + -ing) for actions happening now or around now. Stative verbs (know, want, believe) are normally not used in the continuous.",
+    "examples": [
+      "I work in Rome. (habit)",
+      "I am working now. (now)",
+      "I know the answer. (not: I am knowing)"
+    ],
+    "source": "CEFR A2 grammar inventory"
+  },
+  {
+    "rule_id": "TENSE-002",
+    "error_types": [
+      "R:VERB:TENSE"
+    ],
+    "cefr": "B1",
+    "title": "Past simple vs present perfect",
+    "rule": "Use past simple with a finished time (yesterday, in 2020). Use present perfect for past events with present relevance or an unfinished time period (this week, ever, already).",
+    "examples": [
+      "I saw her yesterday.",
+      "I have seen that film.",
+      "Have you ever been to Rome?"
+    ],
+    "source": "CEFR B1 grammar inventory"
+  },
+  {
+    "rule_id": "PREP-001",
+    "error_types": [
+      "R:PREP",
+      "M:PREP"
+    ],
+    "cefr": "A2",
+    "title": "Prepositions of time: in/on/at",
+    "rule": "Use 'at' for clock times and points (at 6pm, at night), 'on' for days and dates (on Monday, on 5 May), 'in' for longer periods (in July, in 2026, in the morning).",
+    "examples": [
+      "at 7 o'clock",
+      "on Friday",
+      "in the summer"
+    ],
+    "source": "CEFR A2 grammar inventory"
+  },
+  {
+    "rule_id": "PREP-002",
+    "error_types": [
+      "R:PREP",
+      "M:PREP"
+    ],
+    "cefr": "B1",
+    "title": "Dependent prepositions after verbs/adjectives",
+    "rule": "Many verbs and adjectives require a fixed preposition: depend ON, interested IN, good AT, afraid OF, listen TO. These are learned as chunks.",
+    "examples": [
+      "It depends on the weather.",
+      "She is interested in art.",
+      "I'm good at maths."
+    ],
+    "source": "CEFR B1 grammar inventory"
+  },
+  {
+    "rule_id": "NUM-001",
+    "error_types": [
+      "R:NOUN:NUM"
+    ],
+    "cefr": "A1",
+    "title": "Countable plurals",
+    "rule": "Countable nouns take a plural form (usually -s/-es). After plural determiners (many, several, two) the noun must be plural.",
+    "examples": [
+      "two books",
+      "many people",
+      "three boxes"
+    ],
+    "source": "CEFR A1 grammar inventory"
+  },
+  {
+    "rule_id": "NUM-002",
+    "error_types": [
+      "R:NOUN:NUM",
+      "U:NOUN"
+    ],
+    "cefr": "A2",
+    "title": "Uncountable nouns",
+    "rule": "Uncountable nouns (information, advice, furniture, money) have no plural and take a singular verb. Quantify them with 'some', 'much', 'a piece of'.",
+    "examples": [
+      "some information (not: informations)",
+      "a piece of advice",
+      "much money"
+    ],
+    "source": "CEFR A2 grammar inventory"
+  },
+  {
+    "rule_id": "WO-001",
+    "error_types": [
+      "R:WO"
+    ],
+    "cefr": "A2",
+    "title": "Basic word order: SVO and adverb placement",
+    "rule": "English default order is Subject-Verb-Object. Adverbs of frequency go before the main verb but after 'be'. Do not place an adverb between verb and object.",
+    "examples": [
+      "I often play tennis.",
+      "She is always late.",
+      "I like coffee very much. (not: I like very much coffee)"
+    ],
+    "source": "CEFR A2 grammar inventory"
+  },
+  {
+    "rule_id": "WO-002",
+    "error_types": [
+      "R:WO"
+    ],
+    "cefr": "B1",
+    "title": "Question word order",
+    "rule": "Direct questions invert auxiliary and subject (Do you...? Have you...?). Indirect/embedded questions keep statement order (I wonder where he is, not where is he).",
+    "examples": [
+      "Where do you live?",
+      "Can you tell me where the station is?"
+    ],
+    "source": "CEFR B1 grammar inventory"
+  },
+  {
+    "rule_id": "MODAL-001",
+    "error_types": [
+      "R:VERB",
+      "R:MODAL"
+    ],
+    "cefr": "A2",
+    "title": "Modal verbs form",
+    "rule": "Modals (can, must, should, will) are followed by the bare infinitive with no 'to' and no -s for third person.",
+    "examples": [
+      "She can swim. (not: can to swim / cans swim)",
+      "You should rest."
+    ],
+    "source": "CEFR A2 grammar inventory"
+  },
+  {
+    "rule_id": "COND-001",
+    "error_types": [
+      "R:VERB:TENSE",
+      "R:MODAL"
+    ],
+    "cefr": "B1",
+    "title": "First and second conditional",
+    "rule": "First conditional (real future): if + present, will + base. Second conditional (unreal/hypothetical): if + past, would + base.",
+    "examples": [
+      "If it rains, I will stay home.",
+      "If I had money, I would travel."
+    ],
+    "source": "CEFR B1 grammar inventory"
+  },
+  {
+    "rule_id": "PRON-001",
+    "error_types": [
+      "R:PRON"
+    ],
+    "cefr": "A1",
+    "title": "Subject vs object pronouns",
+    "rule": "Subject pronouns (I, he, she, we, they) do the action; object pronouns (me, him, her, us, them) receive it or follow a preposition.",
+    "examples": [
+      "She gave it to me.",
+      "He and I went out. (not: Me and him)"
+    ],
+    "source": "CEFR A1 grammar inventory"
+  },
+  {
+    "rule_id": "AGR-ADJ-001",
+    "error_types": [
+      "R:ADJ"
+    ],
+    "cefr": "A1",
+    "title": "Adjectives are invariable",
+    "rule": "English adjectives do not change for number or gender and normally come before the noun.",
+    "examples": [
+      "red cars (not: reds cars)",
+      "a happy child",
+      "tall buildings"
+    ],
+    "source": "CEFR A1 grammar inventory"
+  },
+  {
+    "rule_id": "COMP-001",
+    "error_types": [
+      "R:ADJ"
+    ],
+    "cefr": "A2",
+    "title": "Comparatives and superlatives",
+    "rule": "Short adjectives add -er/-est (bigger, biggest); longer ones use more/most. Use 'than' after a comparative and 'the' before a superlative.",
+    "examples": [
+      "taller than me",
+      "the most beautiful city",
+      "more interesting than"
+    ],
+    "source": "CEFR A2 grammar inventory"
+  },
+  {
+    "rule_id": "GER-INF-001",
+    "error_types": [
+      "R:VERB:FORM"
+    ],
+    "cefr": "B1",
+    "title": "Gerund vs infinitive after verbs",
+    "rule": "Some verbs take a gerund (enjoy, avoid, finish + -ing), others an infinitive (want, decide, hope + to). Learn them per verb.",
+    "examples": [
+      "I enjoy reading.",
+      "I want to leave.",
+      "She avoided answering."
+    ],
+    "source": "CEFR B1 grammar inventory"
+  },
+  {
+    "rule_id": "ART-ZERO-001",
+    "error_types": [
+      "U:DET"
+    ],
+    "cefr": "B1",
+    "title": "Zero article with generalizations",
+    "rule": "Do not use 'the' before plural or uncountable nouns when speaking in general. Add 'the' only when referring to specific, identifiable instances.",
+    "examples": [
+      "Dogs are loyal. (general)",
+      "The dogs next door bark. (specific)"
+    ],
+    "source": "CEFR B1 grammar inventory"
+  },
+  {
+    "rule_id": "RUNON-001",
+    "error_types": [
+      "R:PUNCT",
+      "M:PUNCT"
+    ],
+    "cefr": "B2",
+    "title": "Comma splices and run-on sentences",
+    "rule": "Do not join two independent clauses with only a comma. Use a full stop, a semicolon, or a coordinating conjunction (and, but, so).",
+    "examples": [
+      "I was tired, so I went to bed.",
+      "It rained. We stayed in."
+    ],
+    "source": "Writing mechanics"
+  },
+  {
+    "rule_id": "SPELL-001",
+    "error_types": [
+      "R:SPELL"
+    ],
+    "cefr": "A2",
+    "title": "Common confusables",
+    "rule": "Distinguish its/it's (possessive vs it is), their/there/they're, your/you're, then/than.",
+    "examples": [
+      "It's raining and the dog lost its bone.",
+      "You're late; your bag is here."
+    ],
+    "source": "Writing mechanics"
+  },
+  {
+    "rule_id": "COH-001",
+    "error_types": [
+      "R:OTHER"
+    ],
+    "cefr": "B2",
+    "title": "Linking words for cohesion",
+    "rule": "Use linkers to signal relationships: however (contrast), therefore (result), for example (illustration), in addition (addition). Punctuate them correctly.",
+    "examples": [
+      "The plan failed; however, we learned a lot."
+    ],
+    "source": "Discourse/cohesion"
+  },
+  {
+    "rule_id": "PASS-001",
+    "error_types": [
+      "R:VERB:FORM"
+    ],
+    "cefr": "B2",
+    "title": "Passive voice formation",
+    "rule": "Form the passive with be + past participle. Use it when the agent is unknown or unimportant. Overuse harms clarity.",
+    "examples": [
+      "The report was written by the team.",
+      "Mistakes were made."
+    ],
+    "source": "CEFR B2 grammar inventory"
+  },
+  {
+    "rule_id": "REL-001",
+    "error_types": [
+      "R:OTHER",
+      "M:PRON"
+    ],
+    "cefr": "B1",
+    "title": "Relative clauses",
+    "rule": "Use who for people, which for things, that for both in defining clauses. Do not add a second subject pronoun (the man who he came -> the man who came).",
+    "examples": [
+      "the woman who called",
+      "a book that changed my life"
+    ],
+    "source": "CEFR B1 grammar inventory"
+  }
+]

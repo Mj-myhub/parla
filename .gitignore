@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+.chroma/
+.venv/
+eval/reports/*.png
+.DS_Store

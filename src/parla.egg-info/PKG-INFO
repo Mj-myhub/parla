@@ -1,0 +1,22 @@
+Metadata-Version: 2.4
+Name: parla
+Version: 0.1.0
+Summary: Evaluation-driven agentic English writing tutor (LangGraph · RAG · CEFR · GEC-benchmarked)
+Requires-Python: >=3.11
+Requires-Dist: langgraph>=0.2
+Requires-Dist: langchain>=0.3
+Requires-Dist: langchain-community>=0.3
+Requires-Dist: chromadb>=0.5
+Requires-Dist: sentence-transformers>=3.0
+Requires-Dist: rank-bm25>=0.2
+Requires-Dist: pydantic-settings>=2.0
+Requires-Dist: streamlit>=1.36
+Requires-Dist: fastapi>=0.111
+Requires-Dist: uvicorn>=0.30
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
+Requires-Dist: errant; extra == "dev"
+Requires-Dist: ragas; extra == "dev"

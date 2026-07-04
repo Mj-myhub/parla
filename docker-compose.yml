@@ -1,0 +1,5 @@
+services:
+  parla:
+    build: .
+    ports: ["8501:8501"]
+    env_file: .env
