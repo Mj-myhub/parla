@@ -1,0 +1,17 @@
+[
+  {"id": "d01", "original": "He go to school every day.",
+   "gold": [{"span": "He go", "correction": "He goes", "type": "R:VERB:SVA"}]},
+  {"id": "d02", "original": "She have two cat.",
+   "gold": [{"span": "She have", "correction": "She has", "type": "R:VERB:SVA"},
+            {"span": "two cat", "correction": "two cats", "type": "R:NOUN:NUM"}]},
+  {"id": "d03", "original": "My father work in a bank.",
+   "gold": [{"span": "father work", "correction": "father works", "type": "R:VERB:SVA"}]},
+  {"id": "d04", "original": "I saw a apple.",
+   "gold": [{"span": "a apple", "correction": "an apple", "type": "R:DET"}]},
+  {"id": "d05", "original": "They goes home after class.",
+   "gold": [{"span": "They goes", "correction": "They go", "type": "R:VERB:SVA"}]},
+  {"id": "d06", "original": "We waited an hour.", "gold": []},
+  {"id": "d07", "original": "She has two cats.", "gold": []},
+  {"id": "d08", "original": "I have visited Rome last year.",
+   "gold": [{"span": "have visited", "correction": "visited", "type": "R:VERB:TENSE"}]}
+]

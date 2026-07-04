@@ -1,14 +1,14 @@
 """Tool 1: hybrid grammatical error detection.
 
 Layer 1 (deterministic string rules): a/an — high precision, no model needed.
-Layer 2 (spaCy morphosyntax): subject-verb agreement + number agreement, written
-    against observed en_core_web_sm tags (VBP/VBZ, Number, Person, nsubj, nummod).
-Layer 3 (LLM, high recall): tense/aspect, register, and the long tail — needs context,
-    so it is delegated to the model rather than faked with brittle rules.
+Layer 2 (spaCy morphosyntax): subject-verb agreement + number agreement.
+Layer 3 (LLM, high recall): tense/aspect, prepositions, context-dependent article errors,
+    word form — the long tail rules can't safely catch. Enabled with use_llm=True.
 
 detect() reconciles the layers (dedupe by span). Precision from rules, recall from LLM.
 """
 from __future__ import annotations
+import json
 import re
 from functools import lru_cache
 from parla.graph.state import DetectedError
@@ -117,19 +117,60 @@ def _spacy_checks(text: str) -> list[DetectedError]:
     return errs
 
 
-def _llm_pass(text: str) -> list[DetectedError]:
-    return []
+_LLM_SYSTEM = (
+    "You are an expert English grammar checker for language learners. Find grammatical "
+    "errors in the learner's text, focusing on tense/aspect, prepositions, missing or "
+    "wrong articles, and word form. For EACH error, output an object with keys: "
+    "'span' (the exact incorrect substring, copied verbatim), 'error_type' (an ERRANT-"
+    "style tag such as R:VERB:TENSE, M:PREP, R:PREP, M:DET, R:WO, R:WORD), and "
+    "'suggestion' (the corrected text for that span only). "
+    "Respond with ONLY a JSON array of such objects and nothing else. If there are no "
+    "errors, respond with []."
+)
+
+
+def _extract_json_array(raw: str) -> list:
+    s = raw.strip()
+    if s.startswith("```"):
+        s = re.sub(r"^```[a-zA-Z]*", "", s).rstrip("`").strip()
+    i, j = s.find("["), s.rfind("]")
+    if i == -1 or j == -1 or j < i:
+        return []
+    try:
+        data = json.loads(s[i:j + 1])
+        return data if isinstance(data, list) else []
+    except (json.JSONDecodeError, ValueError):
+        return []
 
 
 def parse_llm_errors(payload: list[dict]) -> list[DetectedError]:
     out: list[DetectedError] = []
     for item in payload:
+        if not isinstance(item, dict):
+            continue
         span = str(item.get("span", "")).strip()
         if span:
             out.append(DetectedError(span=span,
                                      error_type=str(item.get("error_type", "R:OTHER")).strip() or "R:OTHER",
                                      suggestion=str(item.get("suggestion", "")).strip()))
     return out
+
+
+@lru_cache(maxsize=1)
+def _default_llm():
+    from langchain.chat_models import init_chat_model
+    from parla.config import settings
+    return init_chat_model(settings.synth_model, model_provider=settings.llm_provider, temperature=0)
+
+
+def _llm_pass(text: str, model=None) -> list[DetectedError]:
+    try:
+        llm = model or _default_llm()
+        resp = llm.invoke([("system", _LLM_SYSTEM), ("human", text)])
+        content = resp.content if hasattr(resp, "content") else str(resp)
+        return parse_llm_errors(_extract_json_array(content))
+    except Exception:
+        return []
 
 
 def _dedupe(errors: list[DetectedError]) -> list[DetectedError]:
@@ -139,10 +180,10 @@ def _dedupe(errors: list[DetectedError]) -> list[DetectedError]:
     return list(seen.values())
 
 
-def detect(text: str, use_spacy: bool = True, use_llm: bool = False) -> list[DetectedError]:
+def detect(text: str, use_spacy: bool = True, use_llm: bool = False, model=None) -> list[DetectedError]:
     errors = _check_articles(text)
     if use_spacy:
         errors += _spacy_checks(text)
     if use_llm:
-        errors += _llm_pass(text)
+        errors += _llm_pass(text, model=model)
     return _dedupe(errors)
