@@ -1,5 +1,4 @@
-"""Parla — Streamlit demo. Shows an HONEST split: grammar corrections verified against a
-rule vs. suggestions (unverified grammar + style/word-choice)."""
+"""Parla — Streamlit demo. Honest split: verified grammar corrections vs suggestions."""
 from dotenv import load_dotenv
 load_dotenv(".env")
 
@@ -15,20 +14,16 @@ def _graph():
     return build_graph()
 
 
+learner_id = st.sidebar.text_input("Learner ID", value="demo")
+if st.sidebar.button("Reset history"):
+    f = learner_profile.STORE_DIR / f"{learner_id}.json"
+    if f.exists():
+        f.unlink()
+st.sidebar.markdown("---")
+
 st.title("Parla ✍️")
 st.caption("An evaluation-driven agentic English writing tutor. Grammar corrections are "
            "verified against a real rule; everything else is shown honestly as a suggestion.")
-
-with st.sidebar:
-    st.header("Learner")
-    learner_id = st.text_input("Learner ID", value="demo")
-    st.markdown("---")
-    prof = learner_profile.load(learner_id)
-    if prof.error_counts:
-        st.subheader("Recurring errors")
-        st.bar_chart(prof.error_counts)
-    else:
-        st.caption("No history yet — submit some writing.")
 
 text = st.text_area("Paste your writing:", height=180,
                     placeholder="He go to school and she have two cat. Yesterday I have visited Rome.")
@@ -72,3 +67,11 @@ if st.button("Get feedback", type="primary") and text.strip():
     if result.get("exercise"):
         with st.expander("Practice exercises"):
             st.write(result["exercise"])
+
+st.sidebar.subheader("Recurring errors")
+prof = learner_profile.load(learner_id)
+if prof.error_counts:
+    st.sidebar.bar_chart(prof.error_counts)
+    st.sidebar.caption(f"Total logged: {sum(prof.error_counts.values())}  ·  level {prof.level}")
+else:
+    st.sidebar.caption("No history yet — submit some writing.")
