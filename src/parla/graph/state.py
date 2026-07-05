@@ -31,6 +31,7 @@ class TutorState(TypedDict, total=False):
     retrieved_rules: list[dict]
     feedback: Feedback
     exercise: str
+    verification: list
     # control
     verify_attempts: int
     max_verify_attempts: int

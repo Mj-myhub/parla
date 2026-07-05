@@ -1,5 +1,5 @@
-"""Parla — Streamlit demo. Run locally with `streamlit run src/parla/app/streamlit_app.py`
-and deploy to Hugging Face Spaces for the public link in the README."""
+"""Parla — Streamlit demo. Shows an HONEST split: grammar corrections verified against a
+rule vs. suggestions (unverified grammar + style/word-choice)."""
 from dotenv import load_dotenv
 load_dotenv(".env")
 
@@ -16,7 +16,8 @@ def _graph():
 
 
 st.title("Parla ✍️")
-st.caption("An evaluation-driven agentic English writing tutor — every correction grounded in a real grammar rule.")
+st.caption("An evaluation-driven agentic English writing tutor. Grammar corrections are "
+           "verified against a real rule; everything else is shown honestly as a suggestion.")
 
 with st.sidebar:
     st.header("Learner")
@@ -36,24 +37,37 @@ if st.button("Get feedback", type="primary") and text.strip():
     with st.spinner("Analysing…"):
         result = _graph().invoke({"learner_id": learner_id, "submission": text,
                                   "max_verify_attempts": 2})
-    fb = result["feedback"]
+    results = result.get("verification", [])
     rules_by_id = {r["rule_id"]: r for r in result.get("retrieved_rules", [])}
+    verified = [r for r in results if r["status"] == "verified"]
+    suggestions = [r for r in results if r["status"] != "verified"]
 
     c1, c2 = st.columns(2)
     c1.metric("Assessed level", result.get("level", "—"))
-    c2.metric("Grounded", "✅ verified" if fb.grounded else "⚠️ partial")
+    c2.metric("Verified grammar fixes", f"{len(verified)} of {len(results)}")
 
-    if fb.corrections:
-        st.subheader("Corrections")
-        for c in fb.corrections:
+    if verified:
+        st.subheader("✅ Corrections (verified against a rule)")
+        for r in verified:
+            c = r["correction"]
             rule = rules_by_id.get(c.rule_id or "", {})
             with st.container(border=True):
                 st.markdown(f"**{c.span}** → **{c.suggestion}**  &nbsp; `{c.error_type}`")
                 if rule:
                     st.caption(f"📖 {rule.get('title','')} ({rule.get('cefr','')}) — {rule.get('rule','')}")
 
+    if suggestions:
+        st.subheader("💡 Suggestions (not verified as grammar)")
+        st.caption("These come from the language model and are not grounded in a rule — "
+                   "treat them as optional: possible improvements or style/word choice.")
+        for r in suggestions:
+            c = r["correction"]
+            label = "style / word choice" if c.error_type == "STYLE" else c.error_type
+            with st.container(border=True):
+                st.markdown(f"**{c.span}** → **{c.suggestion}**  &nbsp; `{label}`")
+
     st.subheader("Feedback")
-    st.write(fb.text)
+    st.write(result["feedback"].text)
 
     if result.get("exercise"):
         with st.expander("Practice exercises"):

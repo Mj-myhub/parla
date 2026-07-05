@@ -43,7 +43,10 @@ def plan_and_generate_node(state: TutorState) -> TutorState:
 
 
 def verify_node(state: TutorState) -> TutorState:
-    state["feedback"].grounded = verifier.is_grounded(state["feedback"], state["retrieved_rules"])
+    results = verifier.verify(state["feedback"].corrections, state["retrieved_rules"], strict=True)
+    state["verification"] = results
+    grammar = [r for r in results if r["status"] != "suggestion"]
+    state["feedback"].grounded = all(r["status"] == "verified" for r in grammar) if grammar else True
     state["verify_attempts"] = state.get("verify_attempts", 0) + 1
     return state
 
