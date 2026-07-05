@@ -88,6 +88,25 @@ statistically powerful benchmark. `OVERLAP` is more lenient than the standard GE
 **judge-agreement study** (validating the Tier-2 judge against human labels) are the next
 steps.
 
+
+### Standard scorer (ERRANT)
+
+Scored with **ERRANT**, the field-standard GEC scorer, on the same annotated set.
+`detection` = found the error span; `correction` = also produced the right fix.
+
+| config | metric | precision | recall | F0.5 |
+|---|---|---|---|---|
+| deterministic | detection / correction | **1.00** | 0.57 | 0.87 |
+| det + LLM | detection / correction | 0.48 | 0.71 | 0.51 |
+
+For the deterministic layer, detection and correction scores are **identical** — when the
+rules fire, they don't just locate the error, they fix it correctly. ERRANT's recall (0.71)
+is lower than the overlap scorer's (0.93) because ERRANT re-tokenises and re-aligns every
+sentence, so the LLM's long phrasal rewrites get split into several edits that don't line
+up one-to-one with the gold annotation. Overlap is lenient; ERRANT is strict and
+standard-comparable — the two together bound the system's real performance.
+
+
 ## Tech stack
 
 LangGraph (orchestration) · LangChain · ChromaDB / BM25 retrieval · spaCy · Groq (Llama)
@@ -107,7 +126,6 @@ streamlit run src/parla/app/streamlit_app.py
 
 ## Roadmap
 
-- ERRANT scoring over the same gold set (standard, comparable GEC metric).
 - Judge-agreement study: measure the Tier-2 faithfulness judge against human labels.
 - Grow the CEFR grammar corpus to raise the verified-grounding rate.
 - Public demo (Hugging Face Spaces) and a short walkthrough.
