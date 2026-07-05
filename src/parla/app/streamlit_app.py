@@ -5,6 +5,7 @@ load_dotenv(".env")
 import streamlit as st
 from parla.graph.graph import build_graph
 from parla.memory import learner_profile
+from parla.tools.tag_labels import label as tag_label
 
 st.set_page_config(page_title="Parla — English writing tutor", page_icon="✍️", layout="centered")
 
@@ -47,7 +48,8 @@ if st.button("Get feedback", type="primary") and text.strip():
             c = r["correction"]
             rule = rules_by_id.get(c.rule_id or "", {})
             with st.container(border=True):
-                st.markdown(f"**{c.span}** → **{c.suggestion}**  &nbsp; `{c.error_type}`")
+                st.markdown(f"**{c.span}** → **{c.suggestion}**")
+                st.caption(f"🏷️ {tag_label(c.error_type)}  ·  `{c.error_type}`")
                 if rule:
                     st.caption(f"📖 {rule.get('title','')} ({rule.get('cefr','')}) — {rule.get('rule','')}")
 
@@ -57,9 +59,9 @@ if st.button("Get feedback", type="primary") and text.strip():
                    "treat them as optional: possible improvements or style/word choice.")
         for r in suggestions:
             c = r["correction"]
-            label = "style / word choice" if c.error_type == "STYLE" else c.error_type
             with st.container(border=True):
-                st.markdown(f"**{c.span}** → **{c.suggestion}**  &nbsp; `{label}`")
+                st.markdown(f"**{c.span}** → **{c.suggestion}**")
+                st.caption(f"🏷️ {tag_label(c.error_type)}  ·  `{c.error_type}`")
 
     st.subheader("Feedback")
     st.write(result["feedback"].text)
@@ -73,5 +75,8 @@ prof = learner_profile.load(learner_id)
 if prof.error_counts:
     st.sidebar.bar_chart(prof.error_counts)
     st.sidebar.caption(f"Total logged: {sum(prof.error_counts.values())}  ·  level {prof.level}")
+    with st.sidebar.expander("What do these tags mean?"):
+        for t in sorted(prof.error_counts):
+            st.caption(f"**{t}** — {tag_label(t)}")
 else:
     st.sidebar.caption("No history yet — submit some writing.")
