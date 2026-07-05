@@ -5,7 +5,9 @@ immediately. The `dense` + `rerank` seams are marked for when you're on your mac
 HF access — turning this from lexical into the hybrid retriever the README advertises.
 """
 from __future__ import annotations
-import json, pickle, argparse
+import json
+import pickle
+import argparse
 from pathlib import Path
 from rank_bm25 import BM25Okapi
 

@@ -1,5 +1,4 @@
 """Graph: compiles, retry gate works, and runs end-to-end (LLM falls back; no key needed)."""
-import tempfile
 from pathlib import Path
 from parla.graph.graph import build_graph, should_retry
 from parla.graph.state import Feedback
