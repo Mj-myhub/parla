@@ -1,26 +1,153 @@
 [
-  {"id": "w1", "source": "womens-rights",
-   "original": "Firstly, we live in a century where theoretically there are not gender differences and women and men have the same rights.",
-   "gold": [{"span": "not gender differences", "correction": "no gender differences", "type": "R:DET"}]},
-  {"id": "w2", "source": "womens-rights",
-   "original": "However, practically there are still some discrimination against women.",
-   "gold": [{"span": "are still some discrimination", "correction": "is still some discrimination", "type": "R:VERB:SVA"}]},
-  {"id": "w3", "source": "womens-rights",
-   "original": "For instance, sometimes women are paid less than men, although they work more hours per week.",
-   "gold": []},
-  {"id": "w4", "source": "womens-rights",
-   "original": "Additionally, almost always women are not only hard worker, but also mothers.",
-   "gold": [{"span": "hard worker", "correction": "hard workers", "type": "R:NOUN:NUM"}]},
-  {"id": "w5", "source": "womens-rights",
-   "original": "For this reason, they have to sacrifice a lot of their family and career.",
-   "gold": [{"span": "a lot of their family", "correction": "a lot for their family", "type": "R:PREP"}]},
-  {"id": "w6", "source": "womens-rights",
-   "original": "I firmly believe that a woman's career is as important as man's.",
-   "gold": [{"span": "as man's", "correction": "as a man's", "type": "M:DET"}]},
-  {"id": "w7", "source": "womens-rights",
-   "original": "Overall, I firmly believe that people who think that women must stay at home without working have an old mentality.",
-   "gold": []},
-  {"id": "w8", "source": "womens-rights",
-   "original": "Women have to work and follow their goals.",
-   "gold": []}
+  {
+    "id": "w1",
+    "source": "womens-rights",
+    "original": "Firstly, we live in a century where theoretically there are not gender differences and women and men have the same rights.",
+    "gold": [
+      {
+        "span": "not gender differences",
+        "correction": "no gender differences",
+        "type": "R:DET"
+      }
+    ]
+  },
+  {
+    "id": "w2",
+    "source": "womens-rights",
+    "original": "However, practically there are still some discrimination against women.",
+    "gold": [
+      {
+        "span": "are still some discrimination",
+        "correction": "is still some discrimination",
+        "type": "R:VERB:SVA"
+      }
+    ]
+  },
+  {
+    "id": "w3",
+    "source": "womens-rights",
+    "original": "For instance, sometimes women are paid less than men, although they work more hours per week.",
+    "gold": []
+  },
+  {
+    "id": "w4",
+    "source": "womens-rights",
+    "original": "Additionally, almost always women are not only hard worker, but also mothers.",
+    "gold": [
+      {
+        "span": "hard worker",
+        "correction": "hard workers",
+        "type": "R:NOUN:NUM"
+      }
+    ]
+  },
+  {
+    "id": "w5",
+    "source": "womens-rights",
+    "original": "For this reason, they have to sacrifice a lot of their family and career.",
+    "gold": [
+      {
+        "span": "a lot of their family",
+        "correction": "a lot for their family",
+        "type": "R:PREP"
+      }
+    ]
+  },
+  {
+    "id": "w6",
+    "source": "womens-rights",
+    "original": "I firmly believe that a woman's career is as important as man's.",
+    "gold": [
+      {
+        "span": "as man's",
+        "correction": "as a man's",
+        "type": "M:DET"
+      }
+    ]
+  },
+  {
+    "id": "w7",
+    "source": "womens-rights",
+    "original": "Overall, I firmly believe that people who think that women must stay at home without working have an old mentality.",
+    "gold": []
+  },
+  {
+    "id": "w8",
+    "source": "womens-rights",
+    "original": "Women have to work and follow their goals.",
+    "gold": []
+  },
+  {
+    "id": "e1",
+    "source": "beginner-errors",
+    "original": "He go to school every day and she have two cat.",
+    "gold": [
+      {
+        "span": "He go",
+        "correction": "He goes",
+        "type": "R:VERB:SVA"
+      },
+      {
+        "span": "she have",
+        "correction": "she has",
+        "type": "R:VERB:SVA"
+      },
+      {
+        "span": "two cat",
+        "correction": "two cats",
+        "type": "R:NOUN:NUM"
+      }
+    ]
+  },
+  {
+    "id": "e2",
+    "source": "beginner-errors",
+    "original": "I saw a apple on the table and an banana next to it.",
+    "gold": [
+      {
+        "span": "a apple",
+        "correction": "an apple",
+        "type": "R:DET"
+      },
+      {
+        "span": "an banana",
+        "correction": "a banana",
+        "type": "R:DET"
+      }
+    ]
+  },
+  {
+    "id": "e3",
+    "source": "beginner-errors",
+    "original": "My father work in a bank and my brother study at university.",
+    "gold": [
+      {
+        "span": "father work",
+        "correction": "father works",
+        "type": "R:VERB:SVA"
+      },
+      {
+        "span": "brother study",
+        "correction": "brother studies",
+        "type": "R:VERB:SVA"
+      }
+    ]
+  },
+  {
+    "id": "e4",
+    "source": "beginner-errors",
+    "original": "They goes home after three hour of class.",
+    "gold": [
+      {
+        "span": "They goes",
+        "correction": "They go",
+        "type": "R:VERB:SVA"
+      },
+      {
+        "span": "three hour",
+        "correction": "three hours",
+        "type": "R:NOUN:NUM"
+      }
+    ]
+  }
 ]
