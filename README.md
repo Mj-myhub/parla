@@ -1,3 +1,14 @@
+---
+title: Parla
+emoji: ✍️
+colorFrom: blue
+colorTo: indigo
+sdk: streamlit
+sdk_version: 1.40.0
+app_file: app.py
+pinned: false
+---
+
 # Parla — an evaluation-driven agentic English writing tutor
 
 > Parla gives English learners grammar feedback that is **grounded in a real rule** and
