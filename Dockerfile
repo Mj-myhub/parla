@@ -1,8 +1,17 @@
 FROM python:3.11-slim
-WORKDIR /app
-COPY pyproject.toml README.md ./
-COPY src ./src
-RUN pip install --no-cache-dir -e .
-EXPOSE 8501
+
+RUN useradd -m -u 1000 user
+USER user
+ENV HOME=/home/user \
+    PATH=/home/user/.local/bin:$PATH \
+    PYTHONPATH=/home/user/app/src
+WORKDIR /home/user/app
+
+COPY --chown=user requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY --chown=user . .
+
+EXPOSE 7860
 CMD ["streamlit", "run", "src/parla/app/streamlit_app.py", \
-     "--server.port=8501", "--server.address=0.0.0.0"]
+     "--server.port=7860", "--server.address=0.0.0.0", "--server.headless=true"]
