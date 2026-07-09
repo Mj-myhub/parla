@@ -3,9 +3,9 @@ title: Parla
 emoji: ✍️
 colorFrom: blue
 colorTo: indigo
-sdk: docker
-app_port: 7860
-app_file: app.py
+sdk: gradio
+sdk_version: 6.20.0
+app_file: gradio_app.py
 pinned: false
 ---
 
