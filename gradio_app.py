@@ -7,6 +7,19 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import gradio as gr
+
+# ZeroGPU (HF free tier) requires at least one @spaces.GPU function at startup.
+# Parla is CPU-only, so this is a no-op that just satisfies that check. Guarded so the
+# app also runs locally, where the 'spaces' package isn't installed.
+try:
+    import spaces
+
+    @spaces.GPU
+    def _warmup():
+        return None
+except Exception:
+    pass
+
 from parla.graph.graph import build_graph
 from parla.tools.tag_labels import label as tag_label
 
