@@ -13,6 +13,7 @@ import re
 from functools import lru_cache
 from parla.graph.state import DetectedError
 
+# ---- Layer 1: a/an ---------------------------------------------------------
 _TAKES_A = {
     "university", "unicorn", "unique", "union", "united", "universe", "unit",
     "uniform", "user", "useful", "usual", "european", "euro", "ukulele", "one",
@@ -46,6 +47,7 @@ def _check_articles(text: str) -> list[DetectedError]:
     return errs
 
 
+# ---- morphology helpers (pure, unit-tested) --------------------------------
 _IRREGULAR_3SG = {"have": "has", "be": "is", "do": "does", "go": "goes"}
 
 
@@ -69,6 +71,35 @@ def pluralize(noun: str) -> str:
     return noun + "s"
 
 
+# ---- Layer 1b: spellcheck (deterministic; NON-WORD errors only) ------------
+# Catches dictionary misses like "aventages"/"cointend" with near-perfect precision.
+# Real-word misuse ("whit", "flash") needs context and is left to the LLM layer.
+@lru_cache(maxsize=1)
+def _spell():
+    try:
+        from spellchecker import SpellChecker
+        return SpellChecker()
+    except Exception:
+        return None
+
+
+def _check_spelling(text: str) -> list[DetectedError]:
+    sp = _spell()
+    if sp is None:
+        return []
+    errs: list[DetectedError] = []
+    for m in _WORD.finditer(text):
+        w = m.group()
+        if len(w) < 4 or not w.islower() or "'" in w or "-" in w:
+            continue                              # skip short words, proper nouns, contractions
+        if w in sp.unknown([w]):
+            corr = sp.correction(w)
+            if corr and corr != w:
+                errs.append(DetectedError(span=w, error_type="R:SPELL", suggestion=corr))
+    return errs
+
+
+# ---- Layer 2: spaCy agreement checks ---------------------------------------
 _QUANTIFIERS = {"many", "several", "few", "both"}
 
 
@@ -117,15 +148,25 @@ def _spacy_checks(text: str) -> list[DetectedError]:
     return errs
 
 
+# ---- Layer 3: LLM recall pass ----------------------------------------------
+_ALLOWED_TAGS = (
+    "M:DET, R:DET, U:DET, R:VERB:SVA, R:VERB:TENSE, R:VERB:FORM, M:PREP, R:PREP, U:PREP, "
+    "R:NOUN:NUM, R:PRON, R:WO, R:SPELL, M:PUNCT, R:PUNCT, R:WORD"
+)
 _LLM_SYSTEM = (
-    "You are an expert English grammar checker for language learners. Find grammatical "
-    "errors in the learner's text, focusing on tense/aspect, prepositions, missing or "
-    "wrong articles, and word form. For EACH error, output an object with keys: "
-    "'span' (the exact incorrect substring, copied verbatim), 'error_type' (an ERRANT-"
-    "style tag such as R:VERB:TENSE, M:PREP, R:PREP, M:DET, R:WO, R:WORD), and "
-    "'suggestion' (the corrected text for that span only). "
-    "Respond with ONLY a JSON array of such objects and nothing else. If there are no "
-    "errors, respond with []."
+    "You are an expert English grammar checker for language learners. Identify only GENUINE "
+    "issues in the learner's text, and separate two kinds:\n"
+    "1. GRAMMAR errors that are objectively wrong (agreement, tense, articles, prepositions, "
+    "noun number, verb form, word order, spelling, punctuation, pronouns).\n"
+    "2. STYLE / word-choice suggestions that are not wrong but could read better.\n\n"
+    "For EACH item output an object with keys: 'span' (the exact incorrect substring, copied "
+    "verbatim from the text), 'suggestion' (the corrected text for that span only), and "
+    "'error_type'. For a GRAMMAR error, 'error_type' MUST be exactly one tag from this list: "
+    f"{_ALLOWED_TAGS}. For a STYLE / word-choice suggestion, set 'error_type' to exactly "
+    "'STYLE'. Pick the single most accurate tag. Do NOT flag correct text, and never label a "
+    "style preference with a grammar tag. "
+    "Respond with ONLY a JSON array of such objects and nothing else. If there are none, "
+    "respond with []."
 )
 
 
@@ -164,6 +205,18 @@ def _default_llm():
 
 
 def _llm_pass(text: str, model=None) -> list[DetectedError]:
+    """Layer 3, sentence-chunked: per-sentence LLM calls yield minimal, well-tagged
+    edits (vs. clause-length rewrites on long essays), which also ground far better."""
+    sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
+    if len(sentences) <= 1:
+        return _llm_pass_single(text, model=model)
+    errs: list[DetectedError] = []
+    for s in sentences:
+        errs.extend(_llm_pass_single(s, model=model))
+    return errs
+
+
+def _llm_pass_single(text: str, model=None) -> list[DetectedError]:
     try:
         llm = model or _default_llm()
         resp = llm.invoke([("system", _LLM_SYSTEM), ("human", text)])
@@ -171,8 +224,6 @@ def _llm_pass(text: str, model=None) -> list[DetectedError]:
         return parse_llm_errors(_extract_json_array(content))
     except Exception:
         return []
-
-
 def _dedupe(errors: list[DetectedError]) -> list[DetectedError]:
     seen: dict[str, DetectedError] = {}
     for e in errors:
@@ -182,6 +233,7 @@ def _dedupe(errors: list[DetectedError]) -> list[DetectedError]:
 
 def detect(text: str, use_spacy: bool = True, use_llm: bool = False, model=None) -> list[DetectedError]:
     errors = _check_articles(text)
+    errors += _check_spelling(text)
     if use_spacy:
         errors += _spacy_checks(text)
     if use_llm:
