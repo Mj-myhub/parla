@@ -356,5 +356,20 @@
       "a book that changed my life"
     ],
     "source": "CEFR B1 grammar inventory"
+  },
+  {
+    "rule_id": "SPELL-002",
+    "error_types": [
+      "R:SPELL"
+    ],
+    "cefr": "A2",
+    "title": "Spelling of common words",
+    "rule": "Check the spelling of everyday words carefully; a misspelled word is not recognised by readers and can change or hide your meaning. When unsure, compare with the dictionary form.",
+    "examples": [
+      "advantages (not aventages)",
+      "contained (not cointend)",
+      "with (not whit)"
+    ],
+    "source": "Writing mechanics"
   }
 ]
