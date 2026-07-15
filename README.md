@@ -80,25 +80,19 @@ a detection whose span overlaps the gold error region (wording-agnostic).
 | config | scorer | precision | recall | F0.5 |
 |---|---|---|---|---|
 | deterministic | exact / overlap | **1.00** | 0.57 | 0.87 |
-| det + LLM | overlap | 0.65 | **0.93** | 0.69 |
-| det + LLM | exact | 0.40 | 0.57 | 0.43 |
+| det + LLM | overlap | 0.68 | **0.93** | 0.72 |
+| det + LLM | exact | 0.47 | 0.64 | 0.50 |
 
 **Reading it:** the deterministic layer has **perfect precision** (zero false positives) on
-the errors it covers; adding the LLM lifts recall from 0.57 to **0.93** — it finds almost
-everything — at a precision cost (0.65), because it over-flags. That precision/recall
-tradeoff is exactly the point, and it is quantified rather than asserted.
+the errors it covers, but only catches 57% of them. Adding the LLM lifts recall to **0.93**
+at a precision cost (0.68), because it over-flags. That tradeoff is the whole design
+question, and it is measured rather than asserted.
 
 Reproduce with:
 ```bash
 python -m parla.eval.scored_eval
+python -m parla.eval.errant_eval
 ```
-
-**Honest caveats (also in the roadmap):** this is a small, illustrative sample, not a
-statistically powerful benchmark. `OVERLAP` is more lenient than the standard GEC scorer —
-**ERRANT** integration (for a published-comparable correction score) and a
-**judge-agreement study** (validating the Tier-2 judge against human labels) are the next
-steps.
-
 
 ### Standard scorer (ERRANT)
 
@@ -108,14 +102,22 @@ Scored with **ERRANT**, the field-standard GEC scorer, on the same annotated set
 | config | metric | precision | recall | F0.5 |
 |---|---|---|---|---|
 | deterministic | detection / correction | **1.00** | 0.57 | 0.87 |
-| det + LLM | detection / correction | 0.48 | 0.71 | 0.51 |
+| det + LLM | detection | 0.79 | 0.79 | **0.79** |
+| det + LLM | correction | 0.71 | 0.71 | **0.71** |
 
-For the deterministic layer, detection and correction scores are **identical** — when the
-rules fire, they don't just locate the error, they fix it correctly. ERRANT's recall (0.71)
-is lower than the overlap scorer's (0.93) because ERRANT re-tokenises and re-aligns every
-sentence, so the LLM's long phrasal rewrites get split into several edits that don't line
-up one-to-one with the gold annotation. Overlap is lenient; ERRANT is strict and
-standard-comparable — the two together bound the system's real performance.
+For the deterministic layer, detection and correction scores are identical: when the rules
+fire, they don't just locate the error, they fix it correctly.
+
+**What sentence-chunking bought.** Running the LLM per sentence rather than over the whole
+essay raised ERRANT correction F0.5 from 0.51 to 0.71, mostly through precision (0.48 ->
+0.79). Long inputs made the model emit clause-length rewrites that ERRANT could not align
+to gold edits; one sentence at a time, it emits minimal edits that align cleanly.
+
+**Honest caveats.** This is a small, illustrative sample, not a statistically powerful
+benchmark. The gold set also contains no spelling errors, so the spellchecker layer is
+**not measured here** at all, even though it demonstrably fires on real essays. Expanding
+the gold set and a **judge-agreement study** (validating the Tier-2 faithfulness judge
+against human labels) are the next steps.
 
 
 ## Tech stack
